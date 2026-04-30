@@ -1,0 +1,24 @@
+{
+  "name": "notifications-workshop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexisgautier-afk/Notifications-Workshop.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/alexisgautier-afk/Notifications-Workshop/issues"
+  },
+  "homepage": "https://github.com/alexisgautier-afk/Notifications-Workshop#readme",
+  "dependencies": {
+    "puppeteer": "^24.42.0"
+  }
+}
