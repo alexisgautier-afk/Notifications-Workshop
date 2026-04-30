@@ -688,6 +688,41 @@
       .closing-contact { border-right: none; padding: 0; }
     }
 
+
+    /* ─── EDITABLE CELLS ─── */
+    .editable-cell {
+      cursor: text;
+      transition: background 0.12s, box-shadow 0.12s;
+      min-width: 60px;
+    }
+    .editable-cell:hover { background: #EEF2FF !important; }
+    .editable-cell:focus {
+      outline: none;
+      background: #E8EDFF !important;
+      box-shadow: inset 0 -2px 0 var(--balmain);
+    }
+    .editable-cell.is-placeholder { color: var(--text-muted) !important; font-style: italic; font-weight: 400 !important; }
+    .editable-cell:not(.is-placeholder) { color: var(--text-primary) !important; font-style: normal !important; font-weight: 500 !important; }
+    .edit-hint {
+      position: fixed;
+      bottom: 56px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(20,25,50,0.82);
+      backdrop-filter: blur(6px);
+      color: rgba(255,255,255,0.85);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      padding: 6px 16px;
+      border-radius: 20px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.25s;
+      z-index: 300;
+    }
+    .edit-hint.show { opacity: 1; }
+
     /* ─── PRINT ─── */
     @page { size: 338.67mm 190.5mm; margin: 0; }
     @media print {
@@ -838,28 +873,28 @@
             <td class="td-label">Appointment Reminder</td>
             <td>Upcoming appointment on the SA's calendar</td>
             <td>Assigned SA</td>
-            <td><span class="badge badge-tbd">TBD</span></td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s4-timing-1" data-placeholder="TBD">TBD</td>
             <td><span class="badge badge-likely">High</span></td>
           </tr>
           <tr>
             <td class="td-label">Appointment Assigned</td>
             <td>New appointment added to the SA's schedule</td>
             <td>Assigned SA</td>
-            <td><span class="badge badge-tbd">TBD</span></td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s4-timing-2" data-placeholder="TBD">TBD</td>
             <td><span class="badge badge-likely">High</span></td>
           </tr>
           <tr>
             <td class="td-label">New Client Assigned</td>
             <td>Client added to the SA's portfolio by a manager</td>
             <td>Assigned SA</td>
-            <td><span class="badge badge-tbd">TBD</span></td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s4-timing-3" data-placeholder="TBD">TBD</td>
             <td><span class="badge badge-balmain">Medium</span></td>
           </tr>
           <tr>
             <td class="td-label">New Campaign Available</td>
             <td>Campaign published by HQ or store management</td>
-            <td>All SAs <span class="badge badge-tbd" style="margin-left:4px;">Scope TBD</span></td>
-            <td><span class="badge badge-tbd">TBD</span></td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s4-receiver-4" data-placeholder="All SAs">All SAs</td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s4-timing-4" data-placeholder="TBD">TBD</td>
             <td><span class="badge badge-balmain">Medium</span></td>
           </tr>
         </tbody>
@@ -926,26 +961,26 @@
         <tbody>
           <tr>
             <td class="td-label">Appointment Reminder</td>
-            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
-            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+            <td class="editable-cell is-placeholder" style="text-align:center;" contenteditable="true" data-key="s6-push-1" data-placeholder="TBD">TBD</td>
+            <td class="editable-cell is-placeholder" style="text-align:center;" contenteditable="true" data-key="s6-inapp-1" data-placeholder="TBD">TBD</td>
             <td class="td-muted">Time-sensitive. Push is likely needed. Does it also persist in center?</td>
           </tr>
           <tr>
             <td class="td-label">Appointment Assigned</td>
-            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
-            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+            <td class="editable-cell is-placeholder" style="text-align:center;" contenteditable="true" data-key="s6-push-2" data-placeholder="TBD">TBD</td>
+            <td class="editable-cell is-placeholder" style="text-align:center;" contenteditable="true" data-key="s6-inapp-2" data-placeholder="TBD">TBD</td>
             <td class="td-muted">Real-time awareness vs. lower urgency. Push may be optional.</td>
           </tr>
           <tr>
             <td class="td-label">New Client Assigned</td>
-            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
-            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+            <td class="editable-cell is-placeholder" style="text-align:center;" contenteditable="true" data-key="s6-push-3" data-placeholder="TBD">TBD</td>
+            <td class="editable-cell is-placeholder" style="text-align:center;" contenteditable="true" data-key="s6-inapp-3" data-placeholder="TBD">TBD</td>
             <td class="td-muted">Informational. In-app center may be sufficient alone.</td>
           </tr>
           <tr>
             <td class="td-label">New Campaign Available</td>
-            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
-            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+            <td class="editable-cell is-placeholder" style="text-align:center;" contenteditable="true" data-key="s6-push-4" data-placeholder="TBD">TBD</td>
+            <td class="editable-cell is-placeholder" style="text-align:center;" contenteditable="true" data-key="s6-inapp-4" data-placeholder="TBD">TBD</td>
             <td class="td-muted">Broadcast. Center likely sufficient. Push may feel intrusive.</td>
           </tr>
         </tbody>
@@ -996,27 +1031,27 @@
         <tbody>
           <tr>
             <td class="td-label">Appointment Reminder</td>
-            <td style="font-style:italic; color:var(--text-secondary);">"Appointment in 2 hours"</td>
-            <td style="font-style:italic; color:var(--text-secondary);">"Sophie Martin, Personal Shopping, 3:00 PM"</td>
-            <td style="font-style:italic; color:var(--text-secondary);">"Reminder: Your appointment with Sophie Martin is at 3:00 PM today. Personal Shopping."</td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s8-ptitle-1" data-placeholder=""Appointment in 2 hours"">"Appointment in 2 hours"</td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s8-pbody-1" data-placeholder=""Sophie Martin, Personal Shopping, 3:00 PM"">"Sophie Martin, Personal Shopping, 3:00 PM"</td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s8-inapp-1" data-placeholder=""Reminder: Your appointment with Sophie Martin is at 3:00 PM today. Personal Shopping."">"Reminder: Your appointment with Sophie Martin is at 3:00 PM today. Personal Shopping."</td>
           </tr>
           <tr>
             <td class="td-label">Appointment Assigned</td>
-            <td style="font-style:italic; color:var(--text-secondary);">"New appointment for you"</td>
-            <td style="font-style:italic; color:var(--text-secondary);">"Sophie Martin, Tomorrow at 11:00 AM"</td>
-            <td style="font-style:italic; color:var(--text-secondary);">"An appointment with Sophie Martin has been assigned to you for tomorrow at 11:00 AM."</td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s8-ptitle-2" data-placeholder=""New appointment for you"">"New appointment for you"</td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s8-pbody-2" data-placeholder=""Sophie Martin, Tomorrow at 11:00 AM"">"Sophie Martin, Tomorrow at 11:00 AM"</td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s8-inapp-2" data-placeholder=""An appointment with Sophie Martin has been assigned to you for tomorrow at 11:00 AM."">"An appointment with Sophie Martin has been assigned to you for tomorrow at 11:00 AM."</td>
           </tr>
           <tr>
             <td class="td-label">New Client Assigned</td>
-            <td style="font-style:italic; color:var(--text-secondary);">"New client in your portfolio"</td>
-            <td style="font-style:italic; color:var(--text-secondary);">"Sophie Martin has been assigned to you"</td>
-            <td style="font-style:italic; color:var(--text-secondary);">"Sophie Martin has been added to your client portfolio. Tap to view her profile."</td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s8-ptitle-3" data-placeholder=""New client in your portfolio"">"New client in your portfolio"</td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s8-pbody-3" data-placeholder=""Sophie Martin has been assigned to you"">"Sophie Martin has been assigned to you"</td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s8-inapp-3" data-placeholder=""Sophie Martin has been added to your client portfolio. Tap to view her profile."">"Sophie Martin has been added to your client portfolio. Tap to view her profile."</td>
           </tr>
           <tr>
             <td class="td-label">New Campaign Available</td>
-            <td style="font-style:italic; color:var(--text-secondary);">"New campaign available"</td>
-            <td style="font-style:italic; color:var(--text-secondary);">"Summer Collection is live. Tap to discover."</td>
-            <td style="font-style:italic; color:var(--text-secondary);">"The Summer Collection campaign is now live. Tap to view assets and client targeting."</td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s8-ptitle-4" data-placeholder=""New campaign available"">"New campaign available"</td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s8-pbody-4" data-placeholder=""Summer Collection is live. Tap to discover."">"Summer Collection is live. Tap to discover."</td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s8-inapp-4" data-placeholder=""The Summer Collection campaign is now live. Tap to view assets and client targeting."">"The Summer Collection campaign is now live. Tap to view assets and client targeting."</td>
           </tr>
         </tbody>
       </table>
@@ -1080,27 +1115,27 @@
         <tbody>
           <tr>
             <td class="td-label">Appointment Reminder</td>
-            <td>Appointment detail page</td>
-            <td>Appointment detail page</td>
-            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s10-pdest-1" data-placeholder="Appointment detail page">Appointment detail page</td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s10-idest-1" data-placeholder="Appointment detail page">Appointment detail page</td>
+            <td class="editable-cell is-placeholder" style="text-align:center;" contenteditable="true" data-key="s10-conf-1" data-placeholder="TBD">TBD</td>
           </tr>
           <tr>
             <td class="td-label">Appointment Assigned</td>
-            <td>Appointment detail page</td>
-            <td>Appointment detail page</td>
-            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s10-pdest-2" data-placeholder="Appointment detail page">Appointment detail page</td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s10-idest-2" data-placeholder="Appointment detail page">Appointment detail page</td>
+            <td class="editable-cell is-placeholder" style="text-align:center;" contenteditable="true" data-key="s10-conf-2" data-placeholder="TBD">TBD</td>
           </tr>
           <tr>
             <td class="td-label">New Client Assigned</td>
-            <td>Client profile page</td>
-            <td>Client profile page</td>
-            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s10-pdest-3" data-placeholder="Client profile page">Client profile page</td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s10-idest-3" data-placeholder="Client profile page">Client profile page</td>
+            <td class="editable-cell is-placeholder" style="text-align:center;" contenteditable="true" data-key="s10-conf-3" data-placeholder="TBD">TBD</td>
           </tr>
           <tr>
             <td class="td-label">New Campaign Available</td>
-            <td>Campaign detail page <span class="badge badge-tbd" style="margin-left:4px;">or list?</span></td>
-            <td>Campaign detail page</td>
-            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s10-pdest-4" data-placeholder="Campaign detail page">Campaign detail page</td>
+            <td class="editable-cell is-placeholder" contenteditable="true" data-key="s10-idest-4" data-placeholder="Campaign detail page">Campaign detail page</td>
+            <td class="editable-cell is-placeholder" style="text-align:center;" contenteditable="true" data-key="s10-conf-4" data-placeholder="TBD">TBD</td>
           </tr>
         </tbody>
       </table>
@@ -1137,27 +1172,27 @@
             <tbody>
               <tr>
                 <td class="td-label" style="font-size:0.78rem;">Appt. Reminder</td>
-                <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
-                <td><span class="badge badge-tbd">TBD</span></td>
-                <td><span class="badge badge-tbd">TBD</span></td>
+                <td class="editable-cell is-placeholder" style="text-align:center;" contenteditable="true" data-key="s11-channel-1" data-placeholder="TBD">TBD</td>
+                <td class="editable-cell is-placeholder" contenteditable="true" data-key="s11-copy-1" data-placeholder="TBD">TBD</td>
+                <td class="editable-cell is-placeholder" contenteditable="true" data-key="s11-dest-1" data-placeholder="TBD">TBD</td>
               </tr>
               <tr>
                 <td class="td-label" style="font-size:0.78rem;">Appt. Assigned</td>
-                <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
-                <td><span class="badge badge-tbd">TBD</span></td>
-                <td><span class="badge badge-tbd">TBD</span></td>
+                <td class="editable-cell is-placeholder" style="text-align:center;" contenteditable="true" data-key="s11-channel-2" data-placeholder="TBD">TBD</td>
+                <td class="editable-cell is-placeholder" contenteditable="true" data-key="s11-copy-2" data-placeholder="TBD">TBD</td>
+                <td class="editable-cell is-placeholder" contenteditable="true" data-key="s11-dest-2" data-placeholder="TBD">TBD</td>
               </tr>
               <tr>
                 <td class="td-label" style="font-size:0.78rem;">Client Assigned</td>
-                <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
-                <td><span class="badge badge-tbd">TBD</span></td>
-                <td><span class="badge badge-tbd">TBD</span></td>
+                <td class="editable-cell is-placeholder" style="text-align:center;" contenteditable="true" data-key="s11-channel-3" data-placeholder="TBD">TBD</td>
+                <td class="editable-cell is-placeholder" contenteditable="true" data-key="s11-copy-3" data-placeholder="TBD">TBD</td>
+                <td class="editable-cell is-placeholder" contenteditable="true" data-key="s11-dest-3" data-placeholder="TBD">TBD</td>
               </tr>
               <tr>
                 <td class="td-label" style="font-size:0.78rem;">Campaign Available</td>
-                <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
-                <td><span class="badge badge-tbd">TBD</span></td>
-                <td><span class="badge badge-tbd">TBD</span></td>
+                <td class="editable-cell is-placeholder" style="text-align:center;" contenteditable="true" data-key="s11-channel-4" data-placeholder="TBD">TBD</td>
+                <td class="editable-cell is-placeholder" contenteditable="true" data-key="s11-copy-4" data-placeholder="TBD">TBD</td>
+                <td class="editable-cell is-placeholder" contenteditable="true" data-key="s11-dest-4" data-placeholder="TBD">TBD</td>
               </tr>
             </tbody>
           </table>
@@ -1240,7 +1275,10 @@
 
 </div><!-- /deck -->
 
+<div class="edit-hint" id="editHint">Click any highlighted cell to edit · Enter to confirm</div>
+
 <script>
+  // ─── SLIDE NAVIGATION ───
   const slides = document.querySelectorAll('.slide');
   const total = slides.length;
   let cur = 0;
@@ -1252,21 +1290,81 @@
     cur = (n + total) % total;
     slides[cur].classList.add('active');
   }
-
   function move(dir) { goTo(cur + dir); }
 
   document.addEventListener('keydown', e => {
+    if (document.activeElement && document.activeElement.contentEditable === 'true') {
+      if (e.key === 'Enter') { e.preventDefault(); document.activeElement.blur(); }
+      return;
+    }
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); move(1); }
     if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                    { e.preventDefault(); move(-1); }
   });
 
-  // Swipe
   let tx = 0;
   document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
   document.addEventListener('touchend', e => {
     const dx = e.changedTouches[0].clientX - tx;
     if (Math.abs(dx) > 50) move(dx < 0 ? 1 : -1);
   }, { passive: true });
+
+  // ─── EDITABLE CELLS ───
+  const STORE_PREFIX = 'bstyle-workshop-';
+  const cells = document.querySelectorAll('[data-key]');
+  const hint = document.getElementById('editHint');
+  let hintTimer;
+
+  function showHint() {
+    hint.classList.add('show');
+    clearTimeout(hintTimer);
+    hintTimer = setTimeout(() => hint.classList.remove('show'), 2200);
+  }
+
+  // Restore saved values on load
+  cells.forEach(cell => {
+    const saved = localStorage.getItem(STORE_PREFIX + cell.dataset.key);
+    if (saved !== null && saved !== '') {
+      cell.textContent = saved;
+      cell.classList.remove('is-placeholder');
+    }
+  });
+
+  // Wire up each editable cell
+  cells.forEach(cell => {
+    cell.addEventListener('focus', () => {
+      if (cell.classList.contains('is-placeholder')) {
+        cell.textContent = '';
+        cell.classList.remove('is-placeholder');
+      }
+      showHint();
+    });
+
+    cell.addEventListener('blur', () => {
+      const val = cell.textContent.trim();
+      if (val === '' || val === cell.dataset.placeholder) {
+        cell.textContent = cell.dataset.placeholder;
+        cell.classList.add('is-placeholder');
+        localStorage.removeItem(STORE_PREFIX + cell.dataset.key);
+      } else {
+        cell.classList.remove('is-placeholder');
+        localStorage.setItem(STORE_PREFIX + cell.dataset.key, val);
+      }
+    });
+
+    // Prevent multiline in most cells; allow in copy cells
+    cell.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !cell.closest('.copy-table')) {
+        e.preventDefault();
+        cell.blur();
+      }
+    });
+
+    cell.addEventListener('paste', e => {
+      e.preventDefault();
+      const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+      document.execCommand('insertText', false, text);
+    });
+  });
 </script>
 </body>
 </html>
