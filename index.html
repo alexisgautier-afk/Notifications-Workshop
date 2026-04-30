@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B-Style Notifications Workshop — Balmain × VO2 Group</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue-deep: #1E2761;
+      --blue-primary: #34477C;
+      --blue-vo2: #4C6EF5;
+      --blue-vo2-600: #3B5BDB;
+      --blue-light: #4A6FA5;
+      --blue-100: #DBE4FF;
+      --blue-50: #F0F4FF;
+      --text-primary: #1A1D2B;
+      --text-secondary: #5A6178;
+      --text-muted: #8B91A5;
+      --surface: #F7F8FA;
+      --subtle-bg: #EEF0F5;
+      --border: #E2E5ED;
+      --border-accent: #CDD2DE;
+      --balmain: #C9A84C;
+      --balmain-dark: #8A6B1A;
+      --balmain-light: #FAF3E0;
+      --balmain-border: #E8D9A8;
+    }
+
+    html { font-size: clamp(13px, 1vw, 17px); }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #0a0f1e;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* ─── SLIDES ─── */
+    .deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      overflow: hidden;
+    }
+    .slide.active { opacity: 1; pointer-events: all; }
+
+    .slide-dark { background: linear-gradient(135deg, #0d1529 0%, #1a2340 45%, #263266 100%); color: white; }
+    .slide-divider { background: linear-gradient(135deg, #283a6b 0%, #34477C 55%, #3d5290 100%); color: white; }
+    .slide-light { background: var(--surface); color: var(--text-primary); }
+
+    /* ─── LAYOUT ─── */
+    .slide-inner {
+      width: 92vw;
+      max-width: 1500px;
+      padding: 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .grid-5-4 { display: grid; grid-template-columns: 5fr 4fr; gap: 48px; }
+
+    /* ─── WATERMARK ─── */
+    .sirius-mark {
+      position: absolute;
+      right: -5vw;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 85vh;
+      width: auto;
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 1;
+      color: white;
+    }
+
+    /* ─── LOGO ─── */
+    .vo2-logo {
+      position: absolute;
+      bottom: 22px;
+      left: 44px;
+      z-index: 50;
+      opacity: 0.32;
+      pointer-events: none;
+    }
+    .vo2-logo svg { height: 14px; }
+
+    /* ─── FOOTER ─── */
+    .slide-footer {
+      position: absolute;
+      bottom: 26px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      z-index: 2;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .slide-dark .slide-footer, .slide-divider .slide-footer { color: rgba(255,255,255,0.18); }
+    .slide-light .slide-footer { color: var(--text-muted); opacity: 0.45; }
+
+    /* ─── SLIDE COUNTER ─── */
+    .slide-counter {
+      position: absolute;
+      bottom: 22px;
+      right: 44px;
+      z-index: 50;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+    }
+    .slide-dark .slide-counter, .slide-divider .slide-counter { color: rgba(255,255,255,0.28); }
+    .slide-light .slide-counter { color: var(--text-muted); }
+
+    /* ─── SECTION LABEL ─── */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 16px;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--balmain);
+      flex-shrink: 0;
+    }
+
+    /* ─── COVER ─── */
+    .cover-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--balmain);
+      margin-bottom: 22px;
+    }
+    .cover-title {
+      font-family: 'Jost', sans-serif;
+      font-size: clamp(2.4rem, 4.5vw, 4rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      color: white;
+      line-height: 1.06;
+      text-wrap: balance;
+      margin-bottom: 18px;
+    }
+    .cover-subtitle {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 400;
+      color: rgba(255,255,255,0.48);
+      margin-bottom: 52px;
+    }
+    .cover-meta {
+      display: flex;
+      gap: 36px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 26px;
+    }
+    .cover-meta-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+    .cover-meta-item span {
+      display: block;
+      color: rgba(255,255,255,0.7);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0;
+      margin-top: 5px;
+      text-transform: none;
+    }
+
+    /* ─── DIVIDER ─── */
+    .divider-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.38);
+      margin-bottom: 18px;
+    }
+    .divider-title {
+      font-family: 'Jost', sans-serif;
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      color: white;
+      line-height: 1.15;
+      text-wrap: balance;
+      margin-bottom: 16px;
+    }
+    .divider-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.58);
+      line-height: 1.65;
+      max-width: 540px;
+      text-wrap: balance;
+    }
+    .divider-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 30px;
+      padding: 6px 14px;
+      margin-bottom: 26px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+    .divider-pill-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--balmain);
+    }
+
+    /* ─── SLIDE HEADLINE ─── */
+    .slide-headline {
+      font-family: 'Jost', sans-serif;
+      font-size: clamp(1.5rem, 2.6vw, 2.15rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+      text-wrap: balance;
+      margin-bottom: 30px;
+    }
+
+    /* ─── TABLES ─── */
+    .wtable {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .wtable thead th {
+      background: var(--blue-primary);
+      color: white;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      padding: 13px 15px;
+      text-align: left;
+    }
+    .wtable thead th:first-child { border-radius: 0; }
+    .wtable tbody tr:nth-child(even) td { background: var(--subtle-bg); }
+    .wtable tbody tr:nth-child(odd) td { background: white; }
+    .wtable tbody td {
+      padding: 13px 15px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      line-height: 1.5;
+      vertical-align: top;
+    }
+    .wtable tbody tr:last-child td { border-bottom: none; }
+    .wtable tbody td.td-label {
+      font-family: 'Jost', sans-serif;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-size: 0.84rem;
+      white-space: nowrap;
+    }
+    .wtable tbody td.td-muted { color: var(--text-muted); font-size: 0.78rem; }
+
+    /* Copy table — denser */
+    .wtable.copy-table thead th { font-size: 0.68rem; padding: 11px 13px; }
+    .wtable.copy-table tbody td { font-size: 0.78rem; padding: 11px 13px; line-height: 1.45; }
+    .wtable.copy-table tbody td.td-label { font-size: 0.79rem; }
+
+    /* ─── BADGES ─── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .badge-tbd { background: #F1F3F5; border: 1px solid #DEE2E6; color: #868E96; }
+    .badge-likely { background: var(--blue-50); border: 1px solid var(--blue-100); color: var(--blue-vo2-600); }
+    .badge-balmain { background: var(--balmain-light); border: 1px solid var(--balmain-border); color: var(--balmain-dark); }
+    .badge-green { background: #ECFDF5; border: 1px solid #A7F3D0; color: #065F46; }
+
+    /* ─── CARDS ─── */
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px;
+    }
+    .card-bar-blue { border-top: 3px solid var(--blue-vo2); }
+    .card-bar-balmain { border-top: 3px solid var(--balmain); }
+
+    .card-title {
+      font-family: 'Jost', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .card-body {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ─── OBJECTIVE LIST ─── */
+    .obj-list { list-style: none; display: flex; flex-direction: column; gap: 15px; }
+    .obj-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.62;
+    }
+    .obj-list li::before {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--balmain);
+      flex-shrink: 0;
+      margin-top: 7px;
+    }
+
+    /* ─── DECISION GOAL CARD ─── */
+    .decision-card {
+      background: linear-gradient(135deg, #34477C, #1E2761);
+      border: 1px solid rgba(74, 111, 165, 0.4);
+      border-radius: 12px;
+      padding: 22px 26px;
+    }
+    .decision-card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--balmain);
+      margin-bottom: 10px;
+    }
+    .decision-card-text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.68;
+    }
+    .decision-card-text strong { color: white; }
+
+    /* ─── RISK CALLOUT ─── */
+    .risk-card {
+      background: #FFF7ED;
+      border: 1px solid #FED7AA;
+      border-left: 3px solid #F97316;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-top: 16px;
+    }
+    .risk-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #C2410C;
+      margin-bottom: 6px;
+    }
+    .risk-text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      color: #9A3412;
+      line-height: 1.55;
+    }
+
+    /* ─── CHANNEL CARDS ─── */
+    .channel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
+    .channel-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .channel-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 15px;
+    }
+    .channel-icon-push { background: #EEF2FF; }
+    .channel-icon-inapp { background: #F0FDF4; }
+    .channel-card-title {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 5px;
+    }
+    .channel-card-body {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* ─── QUESTION CARDS ─── */
+    .questions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 18px; }
+    .q-card {
+      background: var(--blue-50);
+      border: 1px solid var(--blue-100);
+      border-left: 3px solid var(--blue-vo2);
+      border-radius: 8px;
+      padding: 13px 15px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+    .q-card strong { color: var(--text-primary); }
+
+    /* ─── COPY NOTE ─── */
+    .copy-note {
+      display: flex;
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .copy-note-item {
+      flex: 1;
+      background: var(--balmain-light);
+      border: 1px solid var(--balmain-border);
+      border-radius: 8px;
+      padding: 11px 15px;
+    }
+    .copy-note-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.57rem;
+      font-weight: 500;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--balmain-dark);
+      margin-bottom: 5px;
+    }
+    .copy-note-text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      color: #6B4F1A;
+      line-height: 1.5;
+    }
+
+    /* ─── NEXT STEPS ─── */
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .step-item:last-child { border-bottom: none; }
+    .step-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--blue-primary);
+      color: white;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-title {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+    .step-desc {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    /* ─── SUMMARY LEGEND ─── */
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--border);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+    .legend-row:last-child { border-bottom: none; }
+    .legend-label {
+      font-family: 'Jost', sans-serif;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-size: 0.82rem;
+      min-width: 180px;
+    }
+    .legend-tbd-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* ─── CLOSING ─── */
+    .closing-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--balmain);
+      margin-bottom: 20px;
+    }
+    .closing-title {
+      font-family: 'Jost', sans-serif;
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      color: white;
+      letter-spacing: -0.01em;
+      line-height: 1.06;
+      margin-bottom: 14px;
+    }
+    .closing-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 44px;
+    }
+    .closing-contacts {
+      display: flex;
+      gap: 0;
+      align-items: center;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 28px;
+    }
+    .closing-contact {
+      padding: 0 32px;
+      border-right: 1px solid rgba(255,255,255,0.12);
+    }
+    .closing-contact:first-child { padding-left: 0; }
+    .closing-contact:last-child { border-right: none; }
+    .closing-contact-name {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 3px;
+    }
+    .closing-contact-role {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 4px;
+    }
+    .closing-contact-email {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.38);
+    }
+
+    /* ─── NOISE ─── */
+    .noise-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.015;
+    }
+
+    /* ─── NAV ─── */
+    .nav-zone {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      width: 72px;
+      z-index: 200;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-prev { left: 0; }
+    .nav-next { right: 0; }
+    .nav-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.18);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .nav-zone:hover .nav-btn { opacity: 1; }
+    .nav-btn svg { width: 16px; height: 16px; stroke: rgba(255,255,255,0.75); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .slide.active .ai { animation: fadeUp 500ms cubic-bezier(0.16,1,0.3,1) both; }
+    .slide.active .ai:nth-child(1) { animation-delay: 0ms; }
+    .slide.active .ai:nth-child(2) { animation-delay: 55ms; }
+    .slide.active .ai:nth-child(3) { animation-delay: 110ms; }
+    .slide.active .ai:nth-child(4) { animation-delay: 165ms; }
+    .slide.active .ai:nth-child(5) { animation-delay: 220ms; }
+    .slide.active .ai:nth-child(6) { animation-delay: 275ms; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1100px) {
+      html { font-size: 12px; }
+      .grid-5-4, .grid-2 { grid-template-columns: 1fr; gap: 20px; }
+      .channel-grid { grid-template-columns: 1fr; }
+      .questions-grid { grid-template-columns: 1fr; }
+      .copy-note { flex-direction: column; }
+    }
+    @media (max-width: 640px) {
+      .sirius-mark { display: none; }
+      .slide-inner { width: 96vw; }
+      .closing-contacts { flex-direction: column; gap: 16px; }
+      .closing-contact { border-right: none; padding: 0; }
+    }
+
+    /* ─── PRINT ─── */
+    @page { size: 338.67mm 190.5mm; margin: 0; }
+    @media print {
+      body { overflow: visible; }
+      .slide { position: relative; opacity: 1 !important; pointer-events: all; height: 190.5mm; width: 338.67mm; page-break-after: always; overflow: hidden; }
+      .noise-overlay, .nav-zone { display: none; }
+      html { font-size: 13px; }
+      .slide-inner { padding: 20px 36px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── SIRIUS SVG DEFINITION ─── -->
+<svg style="display:none" id="sirius-def" viewBox="0 0 1410 1320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path id="s1" d="M1090.21 498.835C959.406 564.093 800.253 511.689 734.602 381.666C668.951 251.644 721.671 93.4418 852.475 28.1834C983.279 -37.0751 1142.43 15.3294 1208.08 145.352C1273.73 275.374 1221.01 433.577 1090.21 498.835Z" fill="currentColor"/>
+  <path id="s2" d="M560.015 503.757C429.211 569.015 270.058 516.611 204.407 386.588C138.756 256.566 191.476 98.3637 322.28 33.1052C453.084 -32.1532 612.237 20.2513 677.888 150.274C743.539 280.296 690.819 438.498 560.015 503.757Z" fill="currentColor"/>
+  <path id="s3" d="M383.961 1000.63C253.156 1065.89 94.0029 1013.49 28.3521 883.463C-37.2987 753.441 15.4209 595.239 146.225 529.98C277.029 464.722 436.183 517.126 501.834 647.149C567.484 777.171 514.765 935.373 383.961 1000.63Z" fill="currentColor"/>
+  <path id="s4" d="M1263.77 995.671C1132.96 1060.93 973.808 1008.52 908.157 878.502C842.506 748.48 895.226 590.278 1026.03 525.019C1156.83 459.761 1315.99 512.165 1381.64 642.188C1447.29 772.21 1394.57 930.413 1263.77 995.671Z" fill="currentColor"/>
+  <path id="s5" d="M825.601 1291.8C694.797 1357.06 535.644 1304.66 469.993 1174.64C404.342 1044.61 457.062 886.411 587.866 821.152C718.67 755.894 877.823 808.298 943.474 938.321C1009.12 1068.34 956.405 1226.55 825.601 1291.8Z" fill="currentColor"/>
+</svg>
+
+<!-- ─── NOISE OVERLAY ─── -->
+<svg class="noise-overlay" xmlns="http://www.w3.org/2000/svg">
+  <filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+  <rect width="100%" height="100%" filter="url(#noise)"/>
+</svg>
+
+<!-- ─── NAV ─── -->
+<div class="nav-zone nav-prev" onclick="move(-1)">
+  <div class="nav-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
+</div>
+<div class="nav-zone nav-next" onclick="move(1)">
+  <div class="nav-btn"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+</div>
+
+<div class="deck" id="deck">
+
+  <!-- ══════════════════════════════════════════════════
+       SLIDE 1 — COVER
+  ══════════════════════════════════════════════════ -->
+  <div class="slide slide-dark active" id="s1">
+    <svg class="sirius-mark" viewBox="0 0 1410 1320" fill="none">
+      <use href="#s1"/><use href="#s2"/><use href="#s3"/><use href="#s4"/><use href="#s5"/>
+    </svg>
+
+    <div class="slide-inner" style="text-align:center; display:flex; flex-direction:column; align-items:center;">
+      <div class="cover-eyebrow ai">BALMAIN × VO2 GROUP</div>
+      <div class="cover-title ai">B-Style<br>Notifications</div>
+      <div class="cover-subtitle ai">Notification Strategy Workshop</div>
+      <div class="cover-meta ai">
+        <div class="cover-meta-item">Client<span>Balmain</span></div>
+        <div class="cover-meta-item">Date<span>April 30, 2026</span></div>
+        <div class="cover-meta-item">Format<span>Working Session</span></div>
+        <div class="cover-meta-item">Topics<span>4 Notification Types</span></div>
+      </div>
+    </div>
+
+    <div class="vo2-logo">
+      <svg viewBox="0 0 110 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="14" font-family="Jost, sans-serif" font-weight="800" font-size="13" letter-spacing="3" fill="white">VO2 GROUP</text>
+      </svg>
+    </div>
+    <div class="slide-footer">Confidential — Balmain × VO2 Group — 2026</div>
+    <div class="slide-counter"><span class="cur">1</span> / <span class="tot"></span></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SLIDE 2 — OBJECTIVES & STAKES
+  ══════════════════════════════════════════════════ -->
+  <div class="slide slide-light" id="s2">
+    <div class="slide-inner">
+      <div class="grid-5-4" style="align-items:start;">
+        <div>
+          <div class="section-label ai">Workshop Agenda · Slide 1 of 4</div>
+          <div class="slide-headline ai">Today's Objectives<br>& Stakes</div>
+          <ul class="obj-list">
+            <li class="ai">B-Style is the Sales Associates' daily tool. Notifications are the <strong>first touchpoint</strong> that brings them back into the app — they set the tone for engagement.</li>
+            <li class="ai">Since SAs have <strong>no existing notification system</strong>, this is a greenfield design: we set the standard from day one.</li>
+            <li class="ai">What we decide today: which <strong>triggers to activate</strong>, what SAs read, which channel, and where they land after tapping.</li>
+            <li class="ai">Risk of getting it wrong: <strong>ignored notifications = missed client moments.</strong> Too many = SA distrust of the app.</li>
+          </ul>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:0;">
+          <div class="decision-card ai">
+            <div class="decision-card-label">Decision Goal</div>
+            <div class="decision-card-text">Leave this session with <strong>validated answers on 4 questions</strong> for each notification type: <strong>trigger, channel, copy,</strong> and <strong>destination.</strong></div>
+          </div>
+          <div class="risk-card ai">
+            <div class="risk-label">Risk to Mitigate</div>
+            <div class="risk-text">Ignored notifications = missed client moments.<br>Over-notification = SA distrust of the app.</div>
+          </div>
+          <div class="card ai" style="margin-top:16px; border-top:3px solid var(--balmain);">
+            <div class="card-title" style="font-size:0.88rem; margin-bottom:6px;">4 Decisions Per Notification</div>
+            <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
+              <div style="display:flex; align-items:center; gap:8px; font-size:0.78rem; color:var(--text-secondary);"><span style="width:16px;height:16px;border-radius:50%;background:var(--blue-primary);color:white;font-family:'Jost',sans-serif;font-weight:700;font-size:0.6rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</span>Trigger — what fires the notification</div>
+              <div style="display:flex; align-items:center; gap:8px; font-size:0.78rem; color:var(--text-secondary);"><span style="width:16px;height:16px;border-radius:50%;background:var(--blue-primary);color:white;font-family:'Jost',sans-serif;font-weight:700;font-size:0.6rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</span>Channel — push, in-app, or both</div>
+              <div style="display:flex; align-items:center; gap:8px; font-size:0.78rem; color:var(--text-secondary);"><span style="width:16px;height:16px;border-radius:50%;background:var(--blue-primary);color:white;font-family:'Jost',sans-serif;font-weight:700;font-size:0.6rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</span>Copy — exact title and body text</div>
+              <div style="display:flex; align-items:center; gap:8px; font-size:0.78rem; color:var(--text-secondary);"><span style="width:16px;height:16px;border-radius:50%;background:var(--blue-primary);color:white;font-family:'Jost',sans-serif;font-weight:700;font-size:0.6rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</span>Destination — screen after tap</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="vo2-logo">
+      <svg viewBox="0 0 110 18" fill="none"><text x="0" y="14" font-family="Jost, sans-serif" font-weight="800" font-size="13" letter-spacing="3" fill="#34477C">VO2 GROUP</text></svg>
+    </div>
+    <div class="slide-footer">Confidential — Balmain × VO2 Group — 2026</div>
+    <div class="slide-counter"><span class="cur">2</span> / <span class="tot"></span></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SLIDE 3 — DIVIDER: 4 TYPES
+  ══════════════════════════════════════════════════ -->
+  <div class="slide slide-divider" id="s3">
+    <svg class="sirius-mark" viewBox="0 0 1410 1320" fill="none">
+      <use href="#s1"/><use href="#s2"/><use href="#s3"/><use href="#s4"/><use href="#s5"/>
+    </svg>
+    <div class="slide-inner" style="text-align:center; display:flex; flex-direction:column; align-items:center;">
+      <div class="divider-pill ai"><span class="divider-pill-dot"></span>Section 1 of 4</div>
+      <div class="divider-title ai">The 4 Notification<br>Types</div>
+      <div class="divider-sub ai">A shared reference before we go into detail. For each type, we align on trigger, receiver, and when it fires.</div>
+    </div>
+    <div class="vo2-logo"><svg viewBox="0 0 110 18" fill="none"><text x="0" y="14" font-family="Jost, sans-serif" font-weight="800" font-size="13" letter-spacing="3" fill="white">VO2 GROUP</text></svg></div>
+    <div class="slide-footer">Confidential — Balmain × VO2 Group — 2026</div>
+    <div class="slide-counter"><span class="cur">3</span> / <span class="tot"></span></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SLIDE 4 — 4 NOTIFICATION TYPES (TABLE)
+  ══════════════════════════════════════════════════ -->
+  <div class="slide slide-light" id="s4">
+    <div class="slide-inner">
+      <div class="section-label ai">Section 1 — Notification Types</div>
+      <div class="slide-headline ai">The 4 Notification Types</div>
+      <table class="wtable ai">
+        <thead>
+          <tr>
+            <th style="width:22%">Notification</th>
+            <th style="width:28%">Trigger</th>
+            <th style="width:22%">Receiver</th>
+            <th style="width:16%">Timing</th>
+            <th style="width:12%">Priority</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-label">Appointment Reminder</td>
+            <td>Upcoming appointment on the SA's calendar</td>
+            <td>Assigned SA</td>
+            <td><span class="badge badge-tbd">TBD</span></td>
+            <td><span class="badge badge-likely">High</span></td>
+          </tr>
+          <tr>
+            <td class="td-label">Appointment Assigned</td>
+            <td>New appointment added to the SA's schedule</td>
+            <td>Assigned SA</td>
+            <td><span class="badge badge-tbd">TBD</span></td>
+            <td><span class="badge badge-likely">High</span></td>
+          </tr>
+          <tr>
+            <td class="td-label">New Client Assigned</td>
+            <td>Client added to the SA's portfolio by a manager</td>
+            <td>Assigned SA</td>
+            <td><span class="badge badge-tbd">TBD</span></td>
+            <td><span class="badge badge-balmain">Medium</span></td>
+          </tr>
+          <tr>
+            <td class="td-label">New Campaign Available</td>
+            <td>Campaign published by HQ or store management</td>
+            <td>All SAs <span class="badge badge-tbd" style="margin-left:4px;">Scope TBD</span></td>
+            <td><span class="badge badge-tbd">TBD</span></td>
+            <td><span class="badge badge-balmain">Medium</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="questions-grid ai" style="margin-top:20px; grid-template-columns:1fr 1fr 1fr;">
+        <div class="q-card"><strong>Timing to define:</strong> Real-time upon event, X hours before, end-of-day batch, or a mix per type?</div>
+        <div class="q-card"><strong>Campaign scope:</strong> Does "New Campaign Available" go to all SAs globally, or filtered by store / client segment?</div>
+        <div class="q-card"><strong>Missed trigger:</strong> If an SA's app is closed at trigger time, do we queue the notification or drop it?</div>
+      </div>
+    </div>
+    <div class="vo2-logo"><svg viewBox="0 0 110 18" fill="none"><text x="0" y="14" font-family="Jost, sans-serif" font-weight="800" font-size="13" letter-spacing="3" fill="#34477C">VO2 GROUP</text></svg></div>
+    <div class="slide-footer">Confidential — Balmain × VO2 Group — 2026</div>
+    <div class="slide-counter"><span class="cur">4</span> / <span class="tot"></span></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SLIDE 5 — DIVIDER: CHANNEL STRATEGY
+  ══════════════════════════════════════════════════ -->
+  <div class="slide slide-divider" id="s5">
+    <svg class="sirius-mark" viewBox="0 0 1410 1320" fill="none">
+      <use href="#s1"/><use href="#s2"/><use href="#s3"/><use href="#s4"/><use href="#s5"/>
+    </svg>
+    <div class="slide-inner" style="text-align:center; display:flex; flex-direction:column; align-items:center;">
+      <div class="divider-pill ai"><span class="divider-pill-dot"></span>Section 2 of 4</div>
+      <div class="divider-title ai">Push vs.<br>In-App Notification Center</div>
+      <div class="divider-sub ai">Two channels are available in B-Style. Before defining copy and destinations, align on which channel each notification should use.</div>
+    </div>
+    <div class="vo2-logo"><svg viewBox="0 0 110 18" fill="none"><text x="0" y="14" font-family="Jost, sans-serif" font-weight="800" font-size="13" letter-spacing="3" fill="white">VO2 GROUP</text></svg></div>
+    <div class="slide-footer">Confidential — Balmain × VO2 Group — 2026</div>
+    <div class="slide-counter"><span class="cur">5</span> / <span class="tot"></span></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SLIDE 6 — PUSH VS IN-APP
+  ══════════════════════════════════════════════════ -->
+  <div class="slide slide-light" id="s6">
+    <div class="slide-inner">
+      <div class="section-label ai">Section 2 — Channel Strategy</div>
+      <div class="channel-grid ai">
+        <div class="channel-card" style="border-top:3px solid var(--blue-vo2);">
+          <div class="channel-icon channel-icon-push">📲</div>
+          <div>
+            <div class="channel-card-title">Push Notification</div>
+            <div class="channel-card-body">Sent to the device lock screen or tray. <strong>Interrupts the SA.</strong> Best for time-sensitive moments. Dismissed once seen — won't persist in the app.</div>
+          </div>
+        </div>
+        <div class="channel-card" style="border-top:3px solid var(--balmain);">
+          <div class="channel-icon channel-icon-inapp">🔔</div>
+          <div>
+            <div class="channel-card-title">In-App Notification Center</div>
+            <div class="channel-card-body">Visible when the SA opens B-Style. <strong>Passive, non-interruptive.</strong> Persists until read or dismissed. Better for lower-urgency updates.</div>
+          </div>
+        </div>
+      </div>
+      <table class="wtable ai">
+        <thead>
+          <tr>
+            <th style="width:24%">Notification</th>
+            <th style="width:14%; text-align:center;">Push</th>
+            <th style="width:18%; text-align:center;">In-App Center</th>
+            <th>Rationale to Discuss</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-label">Appointment Reminder</td>
+            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+            <td class="td-muted">Time-sensitive — push is likely needed. Does it also persist in center?</td>
+          </tr>
+          <tr>
+            <td class="td-label">Appointment Assigned</td>
+            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+            <td class="td-muted">Real-time awareness vs. lower urgency — push may be optional.</td>
+          </tr>
+          <tr>
+            <td class="td-label">New Client Assigned</td>
+            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+            <td class="td-muted">Informational — in-app center may be sufficient alone.</td>
+          </tr>
+          <tr>
+            <td class="td-label">New Campaign Available</td>
+            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+            <td class="td-muted">Broadcast — center likely sufficient. Push may feel intrusive.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="questions-grid ai">
+        <div class="q-card"><strong>Dual channel:</strong> Can some notifications use both — push for immediacy + persists in center?</div>
+        <div class="q-card"><strong>Dismissal:</strong> Should SAs be able to dismiss entries from the notification center, or do some persist until acted on?</div>
+        <div class="q-card"><strong>Unread cap:</strong> Is there a maximum number of unread notifications displayed in the center?</div>
+      </div>
+    </div>
+    <div class="vo2-logo"><svg viewBox="0 0 110 18" fill="none"><text x="0" y="14" font-family="Jost, sans-serif" font-weight="800" font-size="13" letter-spacing="3" fill="#34477C">VO2 GROUP</text></svg></div>
+    <div class="slide-footer">Confidential — Balmain × VO2 Group — 2026</div>
+    <div class="slide-counter"><span class="cur">6</span> / <span class="tot"></span></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SLIDE 7 — DIVIDER: COPY
+  ══════════════════════════════════════════════════ -->
+  <div class="slide slide-divider" id="s7">
+    <svg class="sirius-mark" viewBox="0 0 1410 1320" fill="none">
+      <use href="#s1"/><use href="#s2"/><use href="#s3"/><use href="#s4"/><use href="#s5"/>
+    </svg>
+    <div class="slide-inner" style="text-align:center; display:flex; flex-direction:column; align-items:center;">
+      <div class="divider-pill ai"><span class="divider-pill-dot"></span>Section 3 of 4</div>
+      <div class="divider-title ai">What Text<br>Is Displayed</div>
+      <div class="divider-sub ai">For each notification and each active channel, align on the exact copy. Working examples are provided to react to, refine, and validate.</div>
+    </div>
+    <div class="vo2-logo"><svg viewBox="0 0 110 18" fill="none"><text x="0" y="14" font-family="Jost, sans-serif" font-weight="800" font-size="13" letter-spacing="3" fill="white">VO2 GROUP</text></svg></div>
+    <div class="slide-footer">Confidential — Balmain × VO2 Group — 2026</div>
+    <div class="slide-counter"><span class="cur">7</span> / <span class="tot"></span></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SLIDE 8 — COPY TABLE
+  ══════════════════════════════════════════════════ -->
+  <div class="slide slide-light" id="s8">
+    <div class="slide-inner">
+      <div class="section-label ai">Section 3 — Notification Copy · Working Examples to React To</div>
+      <table class="wtable copy-table ai">
+        <thead>
+          <tr>
+            <th style="width:20%">Notification</th>
+            <th style="width:20%">Push Title <span style="font-weight:400;opacity:0.65;">~30 chars</span></th>
+            <th style="width:26%">Push Body <span style="font-weight:400;opacity:0.65;">~80 chars</span></th>
+            <th>In-App Center Text <span style="font-weight:400;opacity:0.65;">richer, persists</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-label">Appointment Reminder</td>
+            <td style="font-style:italic; color:var(--text-secondary);">"Appointment in 2 hours"</td>
+            <td style="font-style:italic; color:var(--text-secondary);">"Sophie Martin, Personal Shopping, 3:00 PM"</td>
+            <td style="font-style:italic; color:var(--text-secondary);">"Reminder: Your appointment with Sophie Martin is at 3:00 PM today. Personal Shopping."</td>
+          </tr>
+          <tr>
+            <td class="td-label">Appointment Assigned</td>
+            <td style="font-style:italic; color:var(--text-secondary);">"New appointment for you"</td>
+            <td style="font-style:italic; color:var(--text-secondary);">"Sophie Martin, Tomorrow at 11:00 AM"</td>
+            <td style="font-style:italic; color:var(--text-secondary);">"An appointment with Sophie Martin has been assigned to you for tomorrow at 11:00 AM."</td>
+          </tr>
+          <tr>
+            <td class="td-label">New Client Assigned</td>
+            <td style="font-style:italic; color:var(--text-secondary);">"New client in your portfolio"</td>
+            <td style="font-style:italic; color:var(--text-secondary);">"Sophie Martin has been assigned to you"</td>
+            <td style="font-style:italic; color:var(--text-secondary);">"Sophie Martin has been added to your client portfolio. Tap to view her profile."</td>
+          </tr>
+          <tr>
+            <td class="td-label">New Campaign Available</td>
+            <td style="font-style:italic; color:var(--text-secondary);">"New campaign available"</td>
+            <td style="font-style:italic; color:var(--text-secondary);">"Summer Collection is live. Tap to discover."</td>
+            <td style="font-style:italic; color:var(--text-secondary);">"The Summer Collection campaign is now live. Tap to view assets and client targeting."</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="copy-note ai">
+        <div class="copy-note-item">
+          <div class="copy-note-label">Privacy question</div>
+          <div class="copy-note-text">Should the client's name appear? Personalisation vs. privacy on a shared or visible device.</div>
+        </div>
+        <div class="copy-note-item">
+          <div class="copy-note-label">Language</div>
+          <div class="copy-note-text">Does copy need to work in multiple languages? Who owns translation and maintenance?</div>
+        </div>
+        <div class="copy-note-item">
+          <div class="copy-note-label">Push constraints</div>
+          <div class="copy-note-text">Title ~30 chars, body ~80 chars. No context assumed — SA may be off-shift or off-device.</div>
+        </div>
+        <div class="copy-note-item">
+          <div class="copy-note-label">In-app richness</div>
+          <div class="copy-note-text">More client detail, timestamp, read/unread label. Can include action buttons.</div>
+        </div>
+      </div>
+    </div>
+    <div class="vo2-logo"><svg viewBox="0 0 110 18" fill="none"><text x="0" y="14" font-family="Jost, sans-serif" font-weight="800" font-size="13" letter-spacing="3" fill="#34477C">VO2 GROUP</text></svg></div>
+    <div class="slide-footer">Confidential — Balmain × VO2 Group — 2026</div>
+    <div class="slide-counter"><span class="cur">8</span> / <span class="tot"></span></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SLIDE 9 — DIVIDER: TAP DESTINATIONS
+  ══════════════════════════════════════════════════ -->
+  <div class="slide slide-divider" id="s9">
+    <svg class="sirius-mark" viewBox="0 0 1410 1320" fill="none">
+      <use href="#s1"/><use href="#s2"/><use href="#s3"/><use href="#s4"/><use href="#s5"/>
+    </svg>
+    <div class="slide-inner" style="text-align:center; display:flex; flex-direction:column; align-items:center;">
+      <div class="divider-pill ai"><span class="divider-pill-dot"></span>Section 4 of 4</div>
+      <div class="divider-title ai">Where Does<br>the Tap Lead</div>
+      <div class="divider-sub ai">For each notification and channel, define the destination screen inside B-Style. One tap should place the SA in context — no extra navigation needed.</div>
+    </div>
+    <div class="vo2-logo"><svg viewBox="0 0 110 18" fill="none"><text x="0" y="14" font-family="Jost, sans-serif" font-weight="800" font-size="13" letter-spacing="3" fill="white">VO2 GROUP</text></svg></div>
+    <div class="slide-footer">Confidential — Balmain × VO2 Group — 2026</div>
+    <div class="slide-counter"><span class="cur">9</span> / <span class="tot"></span></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SLIDE 10 — TAP DESTINATIONS
+  ══════════════════════════════════════════════════ -->
+  <div class="slide slide-light" id="s10">
+    <div class="slide-inner">
+      <div class="section-label ai">Section 4 — Tap Destinations</div>
+      <div class="slide-headline ai" style="margin-bottom:22px;">Where Does the Tap Lead</div>
+      <table class="wtable ai">
+        <thead>
+          <tr>
+            <th style="width:24%">Notification</th>
+            <th style="width:34%">Push Destination</th>
+            <th style="width:34%">In-App Center Destination</th>
+            <th style="width:8%; text-align:center;">Confirmed</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-label">Appointment Reminder</td>
+            <td>Appointment detail page</td>
+            <td>Appointment detail page</td>
+            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+          </tr>
+          <tr>
+            <td class="td-label">Appointment Assigned</td>
+            <td>Appointment detail page</td>
+            <td>Appointment detail page</td>
+            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+          </tr>
+          <tr>
+            <td class="td-label">New Client Assigned</td>
+            <td>Client profile page</td>
+            <td>Client profile page</td>
+            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+          </tr>
+          <tr>
+            <td class="td-label">New Campaign Available</td>
+            <td>Campaign detail page <span class="badge badge-tbd" style="margin-left:4px;">or list?</span></td>
+            <td>Campaign detail page</td>
+            <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="questions-grid ai" style="margin-top:20px;">
+        <div class="q-card"><strong>Campaign landing:</strong> Does the tap land on the specific campaign detail, or on the campaign list so the SA sees context?</div>
+        <div class="q-card"><strong>Fallback screen:</strong> If a client record or appointment isn't fully loaded yet, what is the fallback? Home screen or loading state?</div>
+        <div class="q-card"><strong>Auto read:</strong> Should tapping a notification in the center mark it as read automatically, or require explicit dismissal?</div>
+      </div>
+    </div>
+    <div class="vo2-logo"><svg viewBox="0 0 110 18" fill="none"><text x="0" y="14" font-family="Jost, sans-serif" font-weight="800" font-size="13" letter-spacing="3" fill="#34477C">VO2 GROUP</text></svg></div>
+    <div class="slide-footer">Confidential — Balmain × VO2 Group — 2026</div>
+    <div class="slide-counter"><span class="cur">10</span> / <span class="tot"></span></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SLIDE 11 — SUMMARY & NEXT STEPS
+  ══════════════════════════════════════════════════ -->
+  <div class="slide slide-light" id="s11">
+    <div class="slide-inner">
+      <div class="grid-2" style="align-items:start; gap:48px;">
+        <div>
+          <div class="section-label ai">Workshop Output</div>
+          <div class="slide-headline ai">Summary &amp; Decisions</div>
+          <div class="ai" style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;">One row per notification — fill during session</div>
+          <table class="wtable ai" style="font-size:0.78rem;">
+            <thead>
+              <tr>
+                <th style="width:28%">Notification</th>
+                <th style="width:18%; text-align:center;">Channel</th>
+                <th style="width:28%">Copy Validated</th>
+                <th>Destination</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-label" style="font-size:0.78rem;">Appt. Reminder</td>
+                <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+                <td><span class="badge badge-tbd">TBD</span></td>
+                <td><span class="badge badge-tbd">TBD</span></td>
+              </tr>
+              <tr>
+                <td class="td-label" style="font-size:0.78rem;">Appt. Assigned</td>
+                <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+                <td><span class="badge badge-tbd">TBD</span></td>
+                <td><span class="badge badge-tbd">TBD</span></td>
+              </tr>
+              <tr>
+                <td class="td-label" style="font-size:0.78rem;">Client Assigned</td>
+                <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+                <td><span class="badge badge-tbd">TBD</span></td>
+                <td><span class="badge badge-tbd">TBD</span></td>
+              </tr>
+              <tr>
+                <td class="td-label" style="font-size:0.78rem;">Campaign Available</td>
+                <td style="text-align:center;"><span class="badge badge-tbd">TBD</span></td>
+                <td><span class="badge badge-tbd">TBD</span></td>
+                <td><span class="badge badge-tbd">TBD</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="ai" style="margin-top:16px; padding:14px 18px; background:var(--balmain-light); border:1px solid var(--balmain-border); border-left:3px solid var(--balmain); border-radius:8px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:0.57rem;letter-spacing:0.13em;text-transform:uppercase;color:var(--balmain-dark);margin-bottom:5px;">Open Items</div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:0.8rem;color:#6B4F1A;line-height:1.55;">Any unresolved items from this session should be captured with an owner and a deadline before closing.</div>
+          </div>
+        </div>
+        <div>
+          <div class="section-label ai">After This Session</div>
+          <div class="ai" style="font-family:'Jost',sans-serif;font-size:1.15rem;font-weight:700;color:var(--text-primary);margin-bottom:20px;">Next Steps</div>
+          <div class="ai">
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div>
+                <div class="step-title">Share validated decisions</div>
+                <div class="step-desc">Circulate the completed summary table to all participants within 24h.</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div>
+                <div class="step-title">Resolve open items</div>
+                <div class="step-desc">Assign an owner and a deadline to each TBD item raised during the session.</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div>
+                <div class="step-title">Hand off to product &amp; dev team</div>
+                <div class="step-desc">Deliver validated specs to the B-Style product and development team for implementation.</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">4</div>
+              <div>
+                <div class="step-title">Validate in staging</div>
+                <div class="step-desc">Review notification copy and destinations in a staging environment before release.</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">5</div>
+              <div>
+                <div class="step-title">Plan SA communication</div>
+                <div class="step-desc">Prepare onboarding message so SAs understand the new notification system before go-live.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="vo2-logo"><svg viewBox="0 0 110 18" fill="none"><text x="0" y="14" font-family="Jost, sans-serif" font-weight="800" font-size="13" letter-spacing="3" fill="#34477C">VO2 GROUP</text></svg></div>
+    <div class="slide-footer">Confidential — Balmain × VO2 Group — 2026</div>
+    <div class="slide-counter"><span class="cur">11</span> / <span class="tot"></span></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SLIDE 12 — CLOSING
+  ══════════════════════════════════════════════════ -->
+  <div class="slide slide-dark" id="s12">
+    <svg class="sirius-mark" viewBox="0 0 1410 1320" fill="none">
+      <use href="#s1"/><use href="#s2"/><use href="#s3"/><use href="#s4"/><use href="#s5"/>
+    </svg>
+    <div class="slide-inner" style="text-align:center; display:flex; flex-direction:column; align-items:center;">
+      <div class="closing-eyebrow ai">BALMAIN × VO2 GROUP</div>
+      <div class="closing-title ai">Thank you.</div>
+      <div class="closing-sub ai">B-Style Notifications Workshop · April 2026</div>
+      <div class="closing-contacts ai">
+        <div class="closing-contact">
+          <div class="closing-contact-role">VO2 Group</div>
+          <div class="closing-contact-name">VO2 Team</div>
+          <div class="closing-contact-email">contact@vo2group.com</div>
+        </div>
+        <div class="closing-contact">
+          <div class="closing-contact-role">B-Style Product</div>
+          <div class="closing-contact-name">Balmain Digital</div>
+          <div class="closing-contact-email">bstyle@balmain.com</div>
+        </div>
+      </div>
+    </div>
+    <div class="vo2-logo"><svg viewBox="0 0 110 18" fill="none"><text x="0" y="14" font-family="Jost, sans-serif" font-weight="800" font-size="13" letter-spacing="3" fill="white">VO2 GROUP</text></svg></div>
+    <div class="slide-footer">Confidential — Balmain × VO2 Group — 2026</div>
+    <div class="slide-counter"><span class="cur">12</span> / <span class="tot"></span></div>
+  </div>
+
+</div><!-- /deck -->
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+
+  document.querySelectorAll('.tot').forEach(el => el.textContent = total);
+
+  function goTo(n) {
+    slides[cur].classList.remove('active');
+    cur = (n + total) % total;
+    slides[cur].classList.add('active');
+  }
+
+  function move(dir) { goTo(cur + dir); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); move(1); }
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                    { e.preventDefault(); move(-1); }
+  });
+
+  // Swipe
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 50) move(dx < 0 ? 1 : -1);
+  }, { passive: true });
+</script>
+</body>
+</html>
