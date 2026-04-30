@@ -703,6 +703,51 @@
     }
     .editable-cell.is-placeholder { color: var(--text-muted) !important; font-style: italic; font-weight: 400 !important; }
     .editable-cell:not(.is-placeholder) { color: var(--text-primary) !important; font-style: normal !important; font-weight: 500 !important; }
+    #s4-add-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding: 6px 14px;
+      background: white;
+      border: 1px dashed var(--border-accent);
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+    #s4-add-row:hover {
+      border-color: var(--balmain);
+      color: var(--balmain-dark);
+      background: var(--balmain-light);
+    }
+    .s4-extra-row td { background: white; }
+    .s4-extra-row:nth-child(even) td { background: var(--subtle-bg); }
+    .s4-delete-row {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text-muted);
+      font-size: 11px;
+      line-height: 1;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.15s, background 0.15s, color 0.15s;
+      flex-shrink: 0;
+    }
+    .s4-extra-row:hover .s4-delete-row { opacity: 1; }
+    .s4-delete-row:hover { background: #FEE2E2; color: #DC2626; border-color: #FCA5A5; }
+
     .edit-hint {
       position: fixed;
       bottom: 56px;
@@ -858,7 +903,7 @@
     <div class="slide-inner">
       <div class="section-label ai">Section 1 · Notification Types</div>
       <div class="slide-headline ai">The 4 Notification Types</div>
-      <table class="wtable ai">
+      <table class="wtable ai" id="s4-table">
         <thead>
           <tr>
             <th style="width:22%">Notification</th>
@@ -868,7 +913,7 @@
             <th style="width:12%">Priority</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="s4-tbody">
           <tr>
             <td class="td-label">Appointment Reminder</td>
             <td>Upcoming appointment on the SA's calendar</td>
@@ -899,7 +944,8 @@
           </tr>
         </tbody>
       </table>
-      <div class="questions-grid ai" style="margin-top:20px; grid-template-columns:1fr 1fr 1fr;">
+      <button id="s4-add-row" onclick="addS4Row()">+ Add notification type</button>
+      <div class="questions-grid ai" style="margin-top:14px; grid-template-columns:1fr 1fr 1fr;">
         <div class="q-card"><strong>Timing to define:</strong> Real-time upon event, X hours before, end-of-day batch, or a mix per type?</div>
         <div class="q-card"><strong>Campaign scope:</strong> Does "New Campaign Available" go to all SAs globally, or filtered by store / client segment?</div>
         <div class="q-card"><strong>Missed trigger:</strong> If an SA's app is closed at trigger time, do we queue the notification or drop it?</div>
@@ -1361,6 +1407,93 @@
       document.execCommand('insertText', false, text);
     });
   });
+
+  // ─── SLIDE 4 EXTRA ROWS ───
+  const S4_STORE = 'bstyle-workshop-s4-extra-rows';
+
+  function saveS4Rows() {
+    const rows = [...document.querySelectorAll('.s4-extra-row')].map(tr =>
+      [...tr.querySelectorAll('td[data-col]')].map(td => td.textContent.trim())
+    );
+    localStorage.setItem(S4_STORE, JSON.stringify(rows));
+  }
+
+  function wireS4Row(tr) {
+    tr.querySelectorAll('td[data-col]').forEach(td => {
+      td.addEventListener('focus', () => {
+        if (td.classList.contains('is-placeholder')) {
+          td.textContent = '';
+          td.classList.remove('is-placeholder');
+        }
+        showHint();
+      });
+      td.addEventListener('blur', () => {
+        if (td.textContent.trim() === '') {
+          td.textContent = td.dataset.placeholder;
+          td.classList.add('is-placeholder');
+        } else {
+          td.classList.remove('is-placeholder');
+        }
+        saveS4Rows();
+      });
+      td.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); td.blur(); }
+      });
+      td.addEventListener('paste', e => {
+        e.preventDefault();
+        const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+        document.execCommand('insertText', false, text);
+      });
+    });
+    tr.querySelector('.s4-delete-row').addEventListener('click', () => {
+      tr.remove();
+      saveS4Rows();
+    });
+  }
+
+  function addS4Row(values) {
+    const cols = ['Notification type', 'Trigger', 'Receiver', 'Timing', 'Priority'];
+    const tbody = document.getElementById('s4-tbody');
+    const tr = document.createElement('tr');
+    tr.className = 's4-extra-row';
+    cols.forEach((placeholder, i) => {
+      const td = document.createElement('td');
+      td.contentEditable = 'true';
+      td.dataset.col = i;
+      td.dataset.placeholder = placeholder;
+      const val = values && values[i] !== undefined ? values[i] : '';
+      if (val) {
+        td.textContent = val;
+        td.classList.add('editable-cell');
+      } else {
+        td.textContent = placeholder;
+        td.classList.add('editable-cell', 'is-placeholder');
+      }
+      if (i === 0) td.style.fontFamily = "'Jost', sans-serif";
+      tr.appendChild(td);
+    });
+    // Delete button in last cell
+    const delBtn = document.createElement('button');
+    delBtn.className = 's4-delete-row';
+    delBtn.title = 'Remove row';
+    delBtn.innerHTML = '×';
+    tr.lastChild.style.display = 'flex';
+    tr.lastChild.style.alignItems = 'center';
+    tr.lastChild.style.gap = '6px';
+    tr.lastChild.appendChild(delBtn);
+    tbody.appendChild(tr);
+    wireS4Row(tr);
+    if (!values) {
+      saveS4Rows();
+      tr.querySelector('td').focus();
+    }
+  }
+
+  // Restore extra rows on load
+  try {
+    const saved = JSON.parse(localStorage.getItem(S4_STORE) || '[]');
+    saved.forEach(values => addS4Row(values));
+  } catch(e) {}
 </script>
 </body>
 </html>
