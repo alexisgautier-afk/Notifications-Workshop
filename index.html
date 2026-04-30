@@ -703,7 +703,7 @@
     }
     .editable-cell.is-placeholder { color: var(--text-muted) !important; font-style: italic; font-weight: 400 !important; }
     .editable-cell:not(.is-placeholder) { color: var(--text-primary) !important; font-style: normal !important; font-weight: 500 !important; }
-    #s4-add-row {
+    .add-row-btn, #s4-add-row {
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -728,7 +728,7 @@
     }
     .s4-extra-row td { background: white; }
     .s4-extra-row:nth-child(even) td { background: var(--subtle-bg); }
-    .s4-delete-row {
+    .s4-delete-row, .del-row-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -745,8 +745,8 @@
       transition: opacity 0.15s, background 0.15s, color 0.15s;
       flex-shrink: 0;
     }
-    .s4-extra-row:hover .s4-delete-row { opacity: 1; }
-    .s4-delete-row:hover { background: #FEE2E2; color: #DC2626; border-color: #FCA5A5; }
+    .s4-extra-row:hover .s4-delete-row, .extra-row:hover .del-row-btn { opacity: 1; }
+    .s4-delete-row:hover, .del-row-btn:hover { background: #FEE2E2; color: #DC2626; border-color: #FCA5A5; }
 
     .edit-hint {
       position: fixed;
@@ -944,7 +944,7 @@
           </tr>
         </tbody>
       </table>
-      <button id="s4-add-row" onclick="addS4Row()">+ Add notification type</button>
+      <button class="add-row-btn" id="s4-add-row" onclick="addRow('s4')">+ Add notification type</button>
       <div class="questions-grid ai" style="margin-top:14px; grid-template-columns:1fr 1fr 1fr;">
         <div class="q-card"><strong>Timing to define:</strong> Real-time upon event, X hours before, end-of-day batch, or a mix per type?</div>
         <div class="q-card"><strong>Campaign scope:</strong> Does "New Campaign Available" go to all SAs globally, or filtered by store / client segment?</div>
@@ -995,7 +995,7 @@
           </div>
         </div>
       </div>
-      <table class="wtable ai">
+      <table class="wtable ai" id="s6-table">
         <thead>
           <tr>
             <th style="width:24%">Notification</th>
@@ -1004,7 +1004,7 @@
             <th>Rationale to Discuss</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="s6-tbody">
           <tr>
             <td class="td-label">Appointment Reminder</td>
             <td class="editable-cell is-placeholder" style="text-align:center;" contenteditable="true" data-key="s6-push-1" data-placeholder="TBD">TBD</td>
@@ -1031,7 +1031,8 @@
           </tr>
         </tbody>
       </table>
-      <div class="questions-grid ai">
+      <button class="add-row-btn" onclick="addRow('s6')">+ Add notification type</button>
+      <div class="questions-grid ai" style="margin-top:14px;">
         <div class="q-card"><strong>Dual channel:</strong> Can some notifications use both: push for immediacy + persists in center?</div>
         <div class="q-card"><strong>Dismissal:</strong> Should SAs be able to dismiss entries from the notification center, or do some persist until acted on?</div>
         <div class="q-card"><strong>Unread cap:</strong> Is there a maximum number of unread notifications displayed in the center?</div>
@@ -1065,7 +1066,7 @@
   <div class="slide slide-light" id="s8">
     <div class="slide-inner">
       <div class="section-label ai">Section 3 · Notification Copy · Working Examples to React To</div>
-      <table class="wtable copy-table ai">
+      <table class="wtable copy-table ai" id="s8-table">
         <thead>
           <tr>
             <th style="width:20%">Notification</th>
@@ -1074,7 +1075,7 @@
             <th>In-App Center Text <span style="font-weight:400;opacity:0.65;">richer, persists</span></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="s8-tbody">
           <tr>
             <td class="td-label">Appointment Reminder</td>
             <td class="editable-cell is-placeholder" contenteditable="true" data-key="s8-ptitle-1" data-placeholder=""Appointment in 2 hours"">"Appointment in 2 hours"</td>
@@ -1101,7 +1102,8 @@
           </tr>
         </tbody>
       </table>
-      <div class="copy-note ai">
+      <button class="add-row-btn" onclick="addRow('s8')">+ Add notification type</button>
+      <div class="copy-note ai" style="margin-top:14px;">
         <div class="copy-note-item">
           <div class="copy-note-label">Privacy question</div>
           <div class="copy-note-text">Should the client's name appear? Personalisation vs. privacy on a shared or visible device.</div>
@@ -1149,7 +1151,7 @@
     <div class="slide-inner">
       <div class="section-label ai">Section 4 · Tap Destinations</div>
       <div class="slide-headline ai" style="margin-bottom:22px;">Where Does the Tap Lead</div>
-      <table class="wtable ai">
+      <table class="wtable ai" id="s6-table">
         <thead>
           <tr>
             <th style="width:24%">Notification</th>
@@ -1158,7 +1160,7 @@
             <th style="width:8%; text-align:center;">Confirmed</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="s10-tbody">
           <tr>
             <td class="td-label">Appointment Reminder</td>
             <td class="editable-cell is-placeholder" contenteditable="true" data-key="s10-pdest-1" data-placeholder="Appointment detail page">Appointment detail page</td>
@@ -1185,7 +1187,8 @@
           </tr>
         </tbody>
       </table>
-      <div class="questions-grid ai" style="margin-top:20px;">
+      <button class="add-row-btn" onclick="addRow('s10')">+ Add notification type</button>
+      <div class="questions-grid ai" style="margin-top:14px;">
         <div class="q-card"><strong>Campaign landing:</strong> Does the tap land on the specific campaign detail, or on the campaign list so the SA sees context?</div>
         <div class="q-card"><strong>Fallback screen:</strong> If a client record or appointment isn't fully loaded yet, what is the fallback? Home screen or loading state?</div>
         <div class="q-card"><strong>Auto read:</strong> Should tapping a notification in the center mark it as read automatically, or require explicit dismissal?</div>
@@ -1206,7 +1209,7 @@
           <div class="section-label ai">Workshop Output</div>
           <div class="slide-headline ai">Summary &amp; Decisions</div>
           <div class="ai" style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;">One row per notification, fill during session</div>
-          <table class="wtable ai" style="font-size:0.78rem;">
+          <table class="wtable ai" id="s11-table" style="font-size:0.78rem;">
             <thead>
               <tr>
                 <th style="width:28%">Notification</th>
@@ -1215,7 +1218,7 @@
                 <th>Destination</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="s11-tbody">
               <tr>
                 <td class="td-label" style="font-size:0.78rem;">Appt. Reminder</td>
                 <td class="editable-cell is-placeholder" style="text-align:center;" contenteditable="true" data-key="s11-channel-1" data-placeholder="TBD">TBD</td>
@@ -1242,6 +1245,7 @@
               </tr>
             </tbody>
           </table>
+          <button class="add-row-btn" onclick="addRow('s11')" style="margin-top:10px;">+ Add notification type</button>
         </div>
         <div>
           <div class="section-label ai">After This Session</div>
@@ -1408,23 +1412,32 @@
     });
   });
 
-  // ─── SLIDE 4 EXTRA ROWS ───
-  const S4_STORE = 'bstyle-workshop-s4-extra-rows';
+  // ─── EXTRA ROWS (generic) ───
+  const SLIDE_COLS = {
+    s4:  ['Notification type', 'Trigger', 'Receiver', 'Timing', 'Priority'],
+    s6:  ['Notification type', 'Push', 'In-App Center', 'Rationale'],
+    s8:  ['Notification type', 'Push Title', 'Push Body', 'In-App Center Text'],
+    s10: ['Notification type', 'Push Destination', 'In-App Center Destination', 'Confirmed'],
+    s11: ['Notification type', 'Channel', 'Copy Validated', 'Destination'],
+  };
+  const EXTRA_ROW_CLASS = 'extra-row';
+  const EXTRA_ROW_STORE = sid => 'bstyle-workshop-' + sid + '-extra-rows';
 
-  function saveS4Rows() {
-    const rows = [...document.querySelectorAll('.s4-extra-row')].map(tr =>
-      [...tr.querySelectorAll('td[data-col]')].map(td => td.textContent.trim())
+  function saveRows(sid) {
+    const rows = [...document.querySelectorAll('.' + sid + '-extra-row')].map(tr =>
+      [...tr.querySelectorAll('td[data-col]')].map(td => {
+        const val = td.textContent.trim();
+        return val === td.dataset.placeholder ? '' : val;
+      })
     );
-    localStorage.setItem(S4_STORE, JSON.stringify(rows));
+    localStorage.setItem(EXTRA_ROW_STORE(sid), JSON.stringify(rows));
   }
 
-  function wireS4Row(tr) {
+  function wireRow(tr, sid) {
+    const isCopy = sid === 's8';
     tr.querySelectorAll('td[data-col]').forEach(td => {
       td.addEventListener('focus', () => {
-        if (td.classList.contains('is-placeholder')) {
-          td.textContent = '';
-          td.classList.remove('is-placeholder');
-        }
+        if (td.classList.contains('is-placeholder')) { td.textContent = ''; td.classList.remove('is-placeholder'); }
         showHint();
       });
       td.addEventListener('blur', () => {
@@ -1434,66 +1447,56 @@
         } else {
           td.classList.remove('is-placeholder');
         }
-        saveS4Rows();
+        saveRows(sid);
       });
-      td.addEventListener('keydown', e => {
-        if (e.key === 'Enter') { e.preventDefault(); td.blur(); }
-      });
+      if (!isCopy) {
+        td.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); td.blur(); } });
+      }
       td.addEventListener('paste', e => {
         e.preventDefault();
         const text = (e.clipboardData || window.clipboardData).getData('text/plain');
         document.execCommand('insertText', false, text);
       });
     });
-    tr.querySelector('.s4-delete-row').addEventListener('click', () => {
-      tr.remove();
-      saveS4Rows();
-    });
+    tr.querySelector('.del-row-btn').addEventListener('click', () => { tr.remove(); saveRows(sid); });
   }
 
-  function addS4Row(values) {
-    const cols = ['Notification type', 'Trigger', 'Receiver', 'Timing', 'Priority'];
-    const tbody = document.getElementById('s4-tbody');
+  function addRow(sid, values) {
+    const cols = SLIDE_COLS[sid];
+    const tbody = document.getElementById(sid + '-tbody');
+    if (!tbody) return;
     const tr = document.createElement('tr');
-    tr.className = 's4-extra-row';
+    tr.className = sid + '-extra-row extra-row';
     cols.forEach((placeholder, i) => {
       const td = document.createElement('td');
       td.contentEditable = 'true';
       td.dataset.col = i;
       td.dataset.placeholder = placeholder;
-      const val = values && values[i] !== undefined ? values[i] : '';
-      if (val) {
-        td.textContent = val;
-        td.classList.add('editable-cell');
-      } else {
-        td.textContent = placeholder;
-        td.classList.add('editable-cell', 'is-placeholder');
-      }
-      if (i === 0) td.style.fontFamily = "'Jost', sans-serif";
+      const val = values && values[i] ? values[i] : '';
+      td.textContent = val || placeholder;
+      td.classList.add('editable-cell');
+      if (!val) td.classList.add('is-placeholder');
+      if (i === 0) { td.style.fontFamily = "'Jost', sans-serif"; td.style.fontWeight = '700'; }
       tr.appendChild(td);
     });
-    // Delete button in last cell
     const delBtn = document.createElement('button');
-    delBtn.className = 's4-delete-row';
+    delBtn.className = 'del-row-btn s4-delete-row';
     delBtn.title = 'Remove row';
     delBtn.innerHTML = '×';
-    tr.lastChild.style.display = 'flex';
-    tr.lastChild.style.alignItems = 'center';
-    tr.lastChild.style.gap = '6px';
+    tr.lastChild.style.cssText += ';display:flex;align-items:center;gap:6px;';
     tr.lastChild.appendChild(delBtn);
     tbody.appendChild(tr);
-    wireS4Row(tr);
-    if (!values) {
-      saveS4Rows();
-      tr.querySelector('td').focus();
-    }
+    wireRow(tr, sid);
+    if (!values) { saveRows(sid); tr.querySelector('td').focus(); }
   }
 
-  // Restore extra rows on load
-  try {
-    const saved = JSON.parse(localStorage.getItem(S4_STORE) || '[]');
-    saved.forEach(values => addS4Row(values));
-  } catch(e) {}
+  // Restore all extra rows on load
+  Object.keys(SLIDE_COLS).forEach(sid => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(EXTRA_ROW_STORE(sid)) || '[]');
+      saved.forEach(values => addRow(sid, values));
+    } catch(e) {}
+  });
 </script>
 </body>
 </html>
